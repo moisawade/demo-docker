@@ -1,24 +1,13 @@
-# Use an official Python runtime as base image (for simplicity)
-FROM python:3.9-slim
+# Use official Nginx image as base (for serving static content)
+FROM nginx:alpine
 
-# Set working directory to /app
-WORKDIR /app
+# Copy our app files into the default Nginx document root (/usr/share/nginx/html)
+COPY index.html /usr/share/nginx/html/
+COPY style.css /usr/share/nginx/html/
+COPY logo.jpeg /usr/share/nginx/html/
 
-# Copy requirements file into container at /app/requirements.txt location.
-COPY requirements.txt .
-
-# Install any needed packages specified in requirements.txt (if applicable)
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code into container at /app/
-COPY . .
-
-# Make port 80 available to the world outside this container (if applicable)
+# Expose port 80 for HTTP access (Nginx listens on port 80 by default)
 EXPOSE 80
 
-# Define environment variable(s) if needed, e.g., for Flask app configuration.
-ENV NAME World
-
-# Run app.py when the container launches (assuming you have an app.py script).
-CMD ["python", "app.py"]
-
+# Run command when container starts up (not needed here since Nginx runs automatically)
+CMD ["nginx", "-g", "daemon off;"]
